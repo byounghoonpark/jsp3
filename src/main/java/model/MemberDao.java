@@ -10,52 +10,55 @@ import java.util.List;
 public class MemberDao {
 	//mem 내용을 db에 insert
 	public boolean insert(Member mem) {
+		//mem은 회원가입때 입력한 값들을 가지고있다.
 		//1. Connection 객체
 		Connection conn = DBConnection.getConnection();
 		//2. Statement 객체
 		/*
-		 * PreparedStatement : Statement의 하위 인터페이스
-		 *                    미리 sql 문장을 db에 전송
-		 *                    파라미터로 값을 전달 방식
+		 * PrepareStatement : Statement의 하위 인터페이스
+		 * 					  미리 sql 문장을 db에 전송
+		 * 					  파라미터로 값을 전달 방식
 		 */
 		PreparedStatement pstmt = null;
 		String sql = "insert into member"
-				+ " (id,pass,name,gender,tel,email,picture)"
-				+ " values (?,?,?,?,?,?,?)";
+					 +"(id,pass,name,gender,tel,email,picture)"
+				     +"values(?,?,?,?,?,?,?)";
 		try {
 			pstmt = conn.prepareStatement(sql); 
-			pstmt.setString(1, mem.getId());    //1 : 첫번째 ?
-			pstmt.setString(2, mem.getPass());  //2 : 두번째 ?
+			pstmt.setString(1, mem.getId());	 //1 : 첫번째 ?
+			pstmt.setString(2, mem.getPass()); 
 			pstmt.setString(3, mem.getName());
 			pstmt.setInt(4, mem.getGender());
 			pstmt.setString(5, mem.getTel());
 			pstmt.setString(6, mem.getEmail());
 			pstmt.setString(7, mem.getPicture());
 			//executeUpdate() : select 외에 사용되는 메서드
-			//                  변경되는 레코드 갯수 리턴
-
-			//sql문장실행. 회원정보가 db insert됨
+			//					변경되는 레코드 갯수 리턴
+			//sql문장실행. 회원정보가 db insert됨. 
+			//만약 executeUpdate없으면 등록이 안됨.
 			int cnt = pstmt.executeUpdate(); 
-			if (cnt > 0) return true;
-		} catch (SQLException e) {
+			if(cnt > 0) return true;
+		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
-			//return구문 실행되도 실행됨.
+			//return구문 실행되도 실행됨
 			DBConnection.close(conn, pstmt, null);
 		}
-		return false;			
+		return false;
 	}
-	public Member selectOne(String id) {
-		Connection conn =DBConnection.getConnection();
-		String sql = "select * From member where id= ?";
+	public Member selectOne(String id) { 
+		Connection conn = DBConnection.getConnection();
+		String sql = "select * From member where id = ?";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, id);
+			//executeQuery : select 구문 실행해주는 메서드
 			//ResultSet executeQuery : select 구문 실행
 			rs = pstmt.executeQuery();
-			if(rs.next()) { //id에 해당하는 레코드 존재?
+			if(rs.next()) { //id에 해당하는 레코드 존재? 
+							//존재하면 turn 없으면 밑에 return null로 감
 				Member mem = new Member();
 				mem.setId(rs.getString("id"));
 				mem.setPass(rs.getString("pass"));
@@ -64,20 +67,20 @@ public class MemberDao {
 				mem.setTel(rs.getString("tel"));
 				mem.setEmail(rs.getString("email"));
 				mem.setPicture(rs.getString("picture"));
-				return mem;
-			}
-		} catch (SQLException e) {
+				return mem; //있으면 mem 리턴
+			} 
+		}catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
 			DBConnection.close(conn, pstmt, rs);
-		}
+	    }
 		return null;
 	}
 	public boolean update(Member mem) {
 		Connection conn = DBConnection.getConnection();
 		PreparedStatement pstmt = null;
-		String sql = "update member set name=?,gender=?,email=?,"
-				+ "tel=?,picture=? where id=?";
+		String sql = "update member set name=?, gender=?,email=?," 
+					 +"tel=?, picture=? where id=?";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, mem.getName());
@@ -87,7 +90,7 @@ public class MemberDao {
 			pstmt.setString(5, mem.getPicture());
 			pstmt.setString(6, mem.getId());
 			return pstmt.executeUpdate() > 0;
-		} catch (SQLException e) {
+		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
 			DBConnection.close(conn, pstmt, null);
@@ -95,22 +98,22 @@ public class MemberDao {
 		return false;
 	}
 	public boolean delete(String id) {
-		Connection conn = DBConnection.getConnection();
+		Connection conn = DBConnection.getConnection(); 
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = conn.prepareStatement
 					("delete from member where id=?");
 			pstmt.setString(1, id);
 			return pstmt.executeUpdate() > 0;
-		} catch (SQLException e) {
+		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBConnection.close(conn,pstmt,null);
+			DBConnection.close(conn, pstmt, null);
 		}
 		return false;
 	}
 	public List<Member> list() {
-		Connection conn = DBConnection.getConnection();
+		Connection conn = DBConnection.getConnection(); 
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		List<Member> list = new ArrayList<>();
@@ -126,71 +129,70 @@ public class MemberDao {
 				m.setTel(rs.getString("tel"));
 				m.setEmail(rs.getString("email"));
 				m.setPicture(rs.getString("picture"));
-				list.add(m); //list에 db의 정보 를 저장한 Member 객체 추가
+				list.add(m); // list에 db의 정보를 저장한 Member 객체 추가
 			}
-			return list; //member 테이블의 모든 정보를 저장
-		}catch (SQLException e) {
+			return list; // member 테이블의 모든 정보를 저장
+		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBConnection.close(conn,pstmt,rs);
+			DBConnection.close(conn, pstmt, rs);
 		}
 		return null;
 	}
 	public boolean updatePass(String id, String pass) {
-		Connection conn = DBConnection.getConnection();
+		Connection conn = DBConnection.getConnection(); 
 		PreparedStatement pstmt = null;
-		String sql = "update member1 set pass=? where id=?";
-		try {
+		String sql = "update member set pass=? where id=?";
+		try { 
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, pass);
 			pstmt.setString(2, id);
 			return pstmt.executeUpdate() > 0;
-		} catch (SQLException e) {
+		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
-			DBConnection.close(conn,pstmt,null);
+			DBConnection.close(conn, pstmt, null);
 		}
 		return false;
 	}
-	public String idSearch(String email,String tel) {
-		Connection conn = DBConnection.getConnection();
+	public String idSearch(String email, String tel) {
+		Connection conn = DBConnection.getConnection(); 
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
 			pstmt = conn.prepareStatement
-			 ("select id from member where email=? and tel=?");
+					("select id from member where email=? and tel=?");
 			pstmt.setString(1, email);
 			pstmt.setString(2, tel);
 			rs = pstmt.executeQuery();
-			if (rs.next()) {
+			if(rs.next()) {//rs.next()가 있으면 찾은 것이고 없으면 못찾은것이다.
 				return rs.getString("id");
 			}
-		} catch(SQLException e) {
+		} catch(SQLException e){
 			e.printStackTrace();
 		} finally {
-			DBConnection.close(conn,pstmt,rs);
+			DBConnection.close(conn, pstmt, rs);
 		}
 		return null;
 	}
 	public String pwSearch(String id, String email, String tel) {
-		Connection conn = DBConnection.getConnection();
+		Connection conn = DBConnection.getConnection(); 
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
 			pstmt = conn.prepareStatement
-			 ("select pass from member "
-		 		+ " where id=? and email=? and tel=?");
+					("select pass from member where id=? and email=? and tel=?");
 			pstmt.setString(1, id);
 			pstmt.setString(2, email);
 			pstmt.setString(3, tel);
 			rs = pstmt.executeQuery();
-			if (rs.next()) {
+			if(rs.next()) {
 				return rs.getString("pass");
 			}
-		} catch(SQLException e) {
+		} catch(SQLException e){
 			e.printStackTrace();
 		} finally {
-			DBConnection.close(conn,pstmt,rs);
+			DBConnection.close(conn, pstmt, rs);
 		}
 		return null;
 	}

@@ -1,15 +1,14 @@
 package model;
-
 /*
- * Bean 클래스 : private인 변수와 public인 getter, setter 메서드로
- *             이루어져 있는 클래스
- *   getId() => getter     
- *              id : get 프로퍼티
+ * Bean 클래스 : 모든 접근제한자는 private인 변수와 public인 getter, setter 메서드로
+ * 			   이루어져 있는 클래스
+ * 	 getId() => getter
+ * 				id : get 프로퍼티
  *   setId(String id) => setter
- *              id : set 프로퍼티      
- *    
- *   getXxx => xxx getProperty의 값           
- *   setXxx => xxx setProperty의 값           
+ *   					 id : set 프로페티
+ *   
+ *   getXxx => xxx getProperty의 값
+ *   setXxx => xxx setProperty의 값
  */
 public class Member {
 	private String id;
@@ -19,8 +18,8 @@ public class Member {
 	private String tel;
 	private String email;
 	private String picture;
-	//getter, setter 
-	public String getId() {  //getProperty : id
+	//getter, setter
+	public String getId() { //getProperty : id
 		return id;
 	}
 	public void setId(String id) { //setProperty : id
@@ -62,6 +61,4 @@ public class Member {
 	public void setPicture(String picture) {
 		this.picture = picture;
 	}
-	
-
 }
