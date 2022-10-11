@@ -190,6 +190,7 @@ public class MemberController extends MskimRequestMapping{
     }
  
     @RequestMapping("update")
+    
     public String update (HttpServletRequest request,
 			 HttpServletResponse response) {
     	try {
@@ -211,7 +212,7 @@ public class MemberController extends MskimRequestMapping{
     	   MemberDao dao = new MemberDao();
     	   Member dbMem = dao.selectOne(login);
     	   String msg = "비밀번호가 틀렸습니다.";
-    	   String url = "updateForm.jsp?id="+mem.getId();
+    	   String url = "updateForm?id="+mem.getId();
     	   if(mem.getPass().equals(dbMem.getPass())) {
     		  if(dao.update(mem)) {
     			  msg = "회원 정보 수정이 완료되었습니다.";
@@ -220,6 +221,94 @@ public class MemberController extends MskimRequestMapping{
     			  msg = "회원 정보 수정시 오류발생.";
     		  }
     	   }
+    	   request.setAttribute("msg", msg);
+    	   request.setAttribute("url", url);
+    	   return "/view/alert.jsp";
+    }
+    /*
+   1. id 파라미터 저장하기
+   2. login 여부 검증하기
+      로그아웃상태인 경우 
+         로그인하세요.메세지 출력 후 loginForm.jsp 페이지로 이동
+      관리자가 아니면서 id 파라미터 정보와 login 정보가 다른 경우
+      본인만 탈퇴 가능합니다. 메세지 출력 후 main.jsp 페이지로 이동      
+   3. 현재 화면 출력하기  
+   */
+    @RequestMapping("deleteForm")
+    public String deleteForm (HttpServletRequest request,
+			 HttpServletResponse response) {
+    	String id = request.getParameter("id");
+    	String login = 
+    			(String)request.getSession().getAttribute("login"); 
+    	if(login == null) {
+    		request.setAttribute("msg", "로그인 하세요");
+    		request.setAttribute("url", "loginForm");
+    		return "/view/alert.jsp";		
+    	} else if (!login.equals("admin") && !id.equals(login)){
+    		request.setAttribute("msg", "본인만 탈퇴 가능합니다.");
+    		request.setAttribute("url", "main");
+    		return "/view/alert.jsp";
+    	}
+    	return "/view/member/deleteForm.jsp";
+    }
+  @RequestMapping("delete")
+    
+    public String delete (HttpServletRequest request,
+			 HttpServletResponse response) {
+	  String id = request.getParameter("id");
+	  String pass = request.getParameter("pass");
+      String login = 
+    			   (String)request.getSession().getAttribute("login");
+    	   
+    	   MemberDao dao = new MemberDao();
+    	   Member dbMem = dao.selectOne(login);
+    	   String msg = null;
+    	   String url = null;
+    	   if( !request.getMethod().equals("POST")) {
+    			  msg = "입력방식이 오류입니다.";
+    			  url = "deleteForm?id=" +id;
+    		//3. id가 관리자인경우 탈퇴 불가.  list.jsp 페이지로 이동  
+    		  } else if (id.equals("admin")) {
+    			  msg = "관리자는 탈퇴 불가합니다.";
+    			  url = "list";
+    		//3-1. 로그아웃 상태인 경우 오류 검증  
+    		  } else if (login == null) {	  
+    			  msg = "로그인 하세요";
+    			  url = "loginForm";
+    		//3-2. 본인 탈퇴 검증
+    		  } else if (!login.equals("admin") && !id.equals(login)) {
+    			  msg = "본인만 탈퇴 가능합니다.";
+    			  url = "main";
+    		  } else {  //기본 검증 완료  
+    			
+    			// 4. 비밀번호 검증
+    			//pass : 입력된 비밀번호
+    			//mem.getPass() : db에 등록된 비밀번호
+    			 if(!pass.equals(dbMem.getPass())) { //비밀번호 오류
+    			    msg = "비밀번호 오류";
+    			    url = "deleteForm?id=" +id;
+    			 } else { //비밀번호 일치
+    		   // 5. 비밀번호 일치하는 경우		 
+    				if(dao.delete(id)) {
+    				    msg = id + " 회원이 탈퇴 되었습니다.";
+    				    if(login.equals("admin")) { //관리자 
+    					    url = "list";
+    				    } else {  //일반 사용자 
+    				    	request.getSession().invalidate(); //로그아웃 
+    					    url = "loginForm";
+    				    }
+    				} else {  //회원 정보 삭제시 db 오류 발생 한 경우 
+    				    msg = id + " 회원 탈퇴 실패";
+    				    if(login.equals("admin")) { //관리자 
+    					    url = "list";
+    				    } else {  //일반 사용자 
+    					    url = "deleteForm?id="+id;
+    				    }
+    				}
+    			 }
+    		  }
+    	   request.setAttribute("msg", msg);
+    	   request.setAttribute("url", url);
     	   return "/view/alert.jsp";
     }
 }
