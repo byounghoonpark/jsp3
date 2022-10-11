@@ -166,4 +166,60 @@ public class MemberController extends MskimRequestMapping{
     	request.setAttribute("mem", mem);
     	return "/view/member/info.jsp";
     }
+    @RequestMapping("updateForm")
+    
+    public String updateForm (HttpServletRequest request,
+			 			 HttpServletResponse response) {
+    	String id = request.getParameter("id");
+    	String login = (String)request.getSession().getAttribute("login");  	
+    	if(login == null) { //로그아웃 상태
+    		request.setAttribute("msg", "로그인하세요.");
+    		request.setAttribute("url", "loginForm");
+    		return "/view/alert.jsp";
+    	} 
+    	//3. login 상태 검증 2.
+    	else if(!login.equals("admin") && !id.equals(login)) {
+    		request.setAttribute("msg", "본인 정보만 조회가능합니다.");
+    		request.setAttribute("url", "main");
+    		return "/view/alert.jsp";
+    	}
+    	//4. id에 해당하는 정보를 읽어서 /view/member/info.jsp 화면 출력하기 
+    	Member mem = new MemberDao().selectOne(id);
+    	request.setAttribute("mem", mem);
+    	return "/view/member/updateForm.jsp";
+    }
+ 
+    @RequestMapping("update")
+    public String update (HttpServletRequest request,
+			 HttpServletResponse response) {
+    	try {
+			request.setCharacterEncoding("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	   Member mem = new Member();
+    	   mem.setId(request.getParameter("id"));
+    	   mem.setPass(request.getParameter("pass"));
+    	   mem.setName(request.getParameter("name"));
+    	   mem.setGender(Integer.parseInt(request.getParameter("gender")));
+    	   mem.setTel(request.getParameter("tel"));
+    	   mem.setEmail(request.getParameter("email"));
+    	   mem.setPicture(request.getParameter("picture"));
+    	   String login = 
+    			   (String)request.getSession().getAttribute("login");
+    	   MemberDao dao = new MemberDao();
+    	   Member dbMem = dao.selectOne(login);
+    	   String msg = "비밀번호가 틀렸습니다.";
+    	   String url = "updateForm.jsp?id="+mem.getId();
+    	   if(mem.getPass().equals(dbMem.getPass())) {
+    		  if(dao.update(mem)) {
+    			  msg = "회원 정보 수정이 완료되었습니다.";
+    			  url = "info?id="+mem.getId();
+    		  } else {
+    			  msg = "회원 정보 수정시 오류발생.";
+    		  }
+    	   }
+    	   return "/view/alert.jsp";
+    }
 }
