@@ -25,7 +25,7 @@ request 객체에 mem 이름의 Member객체가 전달--%>
 <input type="hidden" name="picture" value="${ mem.picture}">
 <table><caption>회원 정보 수정</caption>
 <tr><td rowspan="4" valign="bottom">
-  <img src="picture/"${ mem.picture}" 
+  <img src="../picture/"${ mem.picture}" 
                          width="100" height="120" id="pic"><br>
   <font size="1"><a href="javascript:win_upload()">사진수정</a></font>
 </td><th>아이디</th>

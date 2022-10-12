@@ -29,7 +29,7 @@
 	}
 	function win_open(){
 		let op = "width=300, height=300, left=50, top=150"
-		open("memberimg.jsp","",op)
+		open("memberimg","",op)
 	}
 </script>
 </head>

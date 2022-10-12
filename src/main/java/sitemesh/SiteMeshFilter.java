@@ -11,6 +11,9 @@ import org.sitemesh.config.ConfigurableSiteMeshFilter;
  * 	  - ConfigurableSiteMeshFilter 상속받음 : sitemedh 설정을 위한 클래스
  * 	  - addDecoratorPath : 화면의 공통부분을 코딩한 jsp 파일 설정
  * 			/* : 모든 url 요청. jsp/model1/member/loginForm.jsp
+ *    - addExcludedPath("/member/memberimg*") :
+ *         url이 /member/memberimg로 시작하는 경우 layout.jsp 페이지
+ *         적용 안함.
  * 3. layout.jsp 코딩
  */
 @WebFilter("/*")
@@ -18,6 +21,15 @@ public class SiteMeshFilter extends ConfigurableSiteMeshFilter{
 	@Override
 	protected void applyCustomConfiguration
 					(SiteMeshFilterBuilder builder) {
-		builder.addDecoratorPath("/*", "/layout/layout.jsp");
+		builder.addDecoratorPath("/*", "/layout/layout.jsp")
+		.addExcludedPath("/member/memberimg*")
+		.addExcludedPath("/member/idForm*")
+		.addExcludedPath("/member/pwForm*")
+		.addExcludedPath("/member/id*")
+		.addExcludedPath("/member/pw*")
+		.addExcludedPath("/member/passwordForm*")
+		.addExcludedPath("/member/password*");
+
+
 	}
 }
