@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%-- /jsp3/src/main/webapp/view/member/imgupload.jsp--%>    
+<%-- /jsp3/src/main/webapp/view/member/imgupload.jsp --%>   
 <script>
-  //opener 윈도우의 id="pic"인 태그 선택 
-  img = opener.document.getElementById("pic")
-  img.src="../picture/${filename}"
-  //파라미터에 파일이름 설정 => db에 저장
-  opener.document.f.picture.value="${filename}" 
-  self.close()
+// opener id속성값이 pic인 태그 => <img 태그... >  
+   img = opener.document.getElementById("pic");
+   img.src = "../picture/${filename}"; //opener화면의 img태그에 src 설정
+//opener form 태그의 picture 파라미터에 파일이름 설정
+   opener.document.f.picture.value="${filename}";
+   self.close(); //현재 창 (팝업창) close()
 </script>

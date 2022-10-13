@@ -23,13 +23,11 @@ public class SiteMeshFilter extends ConfigurableSiteMeshFilter{
 					(SiteMeshFilterBuilder builder) {
 		builder.addDecoratorPath("/*", "/layout/layout.jsp")
 		.addExcludedPath("/member/memberimg*")
-		.addExcludedPath("/member/idForm*")
-		.addExcludedPath("/member/pwForm*")
 		.addExcludedPath("/member/id*")
 		.addExcludedPath("/member/pw*")
-		.addExcludedPath("/member/passwordForm*")
 		.addExcludedPath("/member/password*");
 
-
+       builder.addDecoratorPath
+       ("/board/*", "/layout/kiclayout.jsp");
 	}
 }

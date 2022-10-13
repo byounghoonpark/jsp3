@@ -1,10 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%-- /jsp3/src/main/webapp/view/member/passwordForm.jsp
-  1. javascript inchk 함수 구현하기
-     - pass, chgpass 값을 필수입력으로 검증.
-     - chgpass == chgpass2 값이 다르면 오류.
---%>    
+<%-- /jsp3/src/main/webapp/view/member/passwordForm.jsp --%>    
 <!DOCTYPE html><html><head><meta charset="UTF-8">
 <title>비밀번호 변경</title>
 <link rel="stylesheet" href="../css/main.css">
