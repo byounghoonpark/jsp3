@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set var="path" value="${pageContext.request.contextPath }"/>
-<%--/jsp3/src/main/webapp/layout/kiclayout.jsp --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="path" value="${pageContext.request.contextPath }" />    
+<%-- /jsp3/src/main/webapp/layout/kiclayout.jsp --%>    
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,50 +33,37 @@
 	<nav class="navbar navbar-expand-sm bg-light navbar-light">
 		<!-- Brand -->
 		<a class="navbar-brand" href="#">
-		<img src="${path}/image/logo.png"
-					width="80%"></a>
+		<img src="${path}/image/logo.png" width="80%"></a>
 
 		<!-- Links -->
 		<ul class="navbar-nav ">
-		<c:if test="${empty sessionScope.login}">
-			<li class="nav-item">
-			<a class="nav-link" 
-			href="${path}/member/joinForm">회원가입</a></li>
-			<li class="nav-item">
-			<a class="nav-link" 
-			href="${path}/member/loginForm">로그인</a></li>
-        </c:if>
-        <c:if test="${empty sessionScope.login}">
-			<li class="nav-item">
-			<a class="nav-link" 
-			href="${path}/member/main">${sessionScope.login}님</a></li>
-			<li class="nav-item">
-			<a class="nav-link" 
-			href="${path}/member/logout">로그아웃</a></li>
-        </c:if>
+		  <c:if test="${empty sessionScope.login}">
+			<li class="nav-item"><a class="nav-link" 
+			   href="${path}/member/joinForm">회원가입</a></li>
+			<li class="nav-item"><a class="nav-link" 
+			   href="${path}/member/loginForm">로그인</a></li> 
+          </c:if> 
+		  <c:if test="${!empty sessionScope.login}">
+			<li class="nav-item"><a class="nav-link" 
+			   href="${path}/member/main">${sessionScope.login}님</a></li>
+			<li class="nav-item"><a class="nav-link" 
+			   href="${path}/member/logout">로그아웃</a></li> 
+          </c:if> 
 			<!-- Dropdown -->
 			<li class="nav-item dropdown"><a
-				class="nav-link dropdown-toggle" href="#" id="navbardrop"
+				class="nav-link dropdown-toggle" 
+				href="#" id="navbardrop"
 				data-toggle="dropdown"> 게시판 </a>
 				<div class="dropdown-menu">
-					<a class="dropdown-item" 
-					href="${path}/board/list?boardid=1">공지사항</a> 
-					<a class="dropdown-item" 
-					href="${path}/board/list?boardid=2">자유게시판</a> 
-					<a class="dropdown-item" 
-					href="${path}/board/list?boardid=3">QnA</a>
+				 <a class="dropdown-item" 
+				   href="${path}/board/list?boardid=1">공지사항</a>
+				 <a	class="dropdown-item" 
+				   href="${path}/board/list?boardid=2">자유게시판</a>
+				 <a class="dropdown-item" 
+				   href="${path}/board/list?boardid=3">QnA</a>
 				</div></li>
 			
 		</ul>
-		<div  class="container justify-content-end">
-				<form class="form-inline" action="#">
-					<input class="form-control mr-sm-2" type="text"
-						placeholder="Search">
-					<button class="btn btn-success" type="submit">Search</button>
-				</form>
-			</div>
-		
-		
 	</nav>
 	<hr>
 	<sitemesh:write property='body'/>

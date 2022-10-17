@@ -34,6 +34,10 @@
 </td></tr>
 <tr><td width="15%" valign="top">
   <a href="${path}/member/main">회원관리</a><br>
-</td><td colspan="2" style="text-align: left; vertical-align: top">
+  <a href="${path}/board/list?boardid=1">공지사항</a><br>
+  <a href="${path}/board/list?boardid=2">자유게시판</a><br>
+  <a href="${path}/board/list?boardid=3">QnA</a><br>
+</td>
+<td colspan="2" style="text-align: left; vertical-align: top">
 <sitemesh:write property='body'/></td></tr>
 <tr><td colspan="3">KIC 캠퍼스</td></tr></table></body></html>

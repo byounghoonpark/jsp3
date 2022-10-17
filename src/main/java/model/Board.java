@@ -16,7 +16,8 @@ public class Board {
 	private int grp;
 	private int grplevel;
 	private int grpstep;
-	// getter,setter,toString
+	
+	// getter,setter, toString
 	public int getNum() {
 		return num;
 	}
@@ -100,5 +101,5 @@ public class Board {
 		return "Board [num=" + num + ", writer=" + writer + ", pass=" + pass + ", subject=" + subject + ", content="
 				+ content + ", file1=" + file1 + ", boardid=" + boardid + ", regdate=" + regdate + ", ip=" + ip
 				+ ", readcnt=" + readcnt + ", grp=" + grp + ", grplevel=" + grplevel + ", grpstep=" + grpstep + "]";
-	}
+	}	
 }

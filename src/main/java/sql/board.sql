@@ -14,4 +14,4 @@ create table board(
     grplevel number(3),    --답변글의 레벨. 원글 + 1
     grpstep number(5));    --글 그룹의 순서 원글 + 1, 기존의 내용이 있는 경우 +1
 
-select * from board
+select * from board    
