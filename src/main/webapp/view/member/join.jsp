@@ -8,7 +8,7 @@
 <title>회원가입 확인</title>
 </head>
 <body>
-<table>ㅑ
+<table>
 <%-- ${mem.id} : mem 객체의 get프로퍼티의 이름
      ${객체이름.프로퍼티명} 
 --%>

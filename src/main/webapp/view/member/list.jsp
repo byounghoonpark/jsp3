@@ -11,7 +11,7 @@
 <th>&nbsp;</th></tr>
 <c:forEach var="m" items="${list}">
 <tr>
-<td><a href="info.jsp?id=${m.id}">${m.id}</a></td>
+<td><a href="info?id=${m.id}">${m.id}</a></td>
 <td><img src="../picture/${m.picture}" width="20" height="30"></td>
 <td>${m.name}</td><td>${m.gender==1?"남":"여"}</td>
 <td>${m.tel}</td>

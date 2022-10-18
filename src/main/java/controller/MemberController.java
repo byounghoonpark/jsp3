@@ -15,7 +15,7 @@ import com.oreilly.servlet.MultipartRequest;
 import kic.mskim.MskimRequestMapping;
 import kic.mskim.RequestMapping;
 import model.Member;
-import model.MemberDao;
+import model.MemberMybatisDao;
 //http://localhost:8088/jsp3/member/joinForm
 /*
  * @WebServlet("/member/*") : url의 정보가 
@@ -25,6 +25,7 @@ import model.MemberDao;
 //CRUD : Create, Read, Update, Delete 
 @WebServlet("/member/*")
 public class MemberController extends MskimRequestMapping{
+	private MemberMybatisDao dao = new MemberMybatisDao();
 	//http://localhost:8088/jsp3/member/joinForm 요청시 호출되는 메서드
     @RequestMapping("joinForm")
     public String joinForm(HttpServletRequest request,
@@ -55,7 +56,7 @@ public class MemberController extends MskimRequestMapping{
     	mem.setEmail(request.getParameter("email"));
     	mem.setPicture(request.getParameter("picture"));
     	//2.Member 객체의 내용을 db에 저장
-    	MemberDao dao = new MemberDao();
+    	
     	if (dao.insert(mem)) {
     		//3.저장성공 : 화면에 내용출력하기
     		request.setAttribute("mem", mem);
@@ -91,7 +92,7 @@ public class MemberController extends MskimRequestMapping{
     	String id = request.getParameter("id");
     	String pass = request.getParameter("pass");
     //  2. db 정보를 읽기. id에 해당하는 db정보를 읽어서 Member 객체에 저장 
-        Member mem = new MemberDao().selectOne(id);
+        Member mem = dao.selectOne(id);
         String msg = null;
         String url = null;
         if(mem == null) { //아이디 없음.
@@ -163,7 +164,7 @@ public class MemberController extends MskimRequestMapping{
     		request.setAttribute("url", "main");
     		return "/view/alert.jsp";
     	}
-    	Member mem = new MemberDao().selectOne(id);
+    	Member mem = dao.selectOne(id);
     	request.setAttribute("mem", mem);
     	return "/view/member/info.jsp";
     }
@@ -183,7 +184,7 @@ public class MemberController extends MskimRequestMapping{
     		return "/view/alert.jsp";
     	}
     	//정상적인 조회
-    	Member mem = new MemberDao().selectOne(id);
+    	Member mem = dao.selectOne(id);
     	request.setAttribute("mem", mem);
     	return "/view/member/updateForm.jsp";
     }
@@ -220,7 +221,7 @@ public class MemberController extends MskimRequestMapping{
     	mem.setPicture(request.getParameter("picture"));
     	String login = 
     	 (String)request.getSession().getAttribute("login");
-    	MemberDao dao = new MemberDao();
+    	
     	Member dbMem = dao.selectOne(login);
     	String msg = "비밀번호가 틀렸습니다.";
     	String url = "updateForm?id="+mem.getId();
@@ -290,7 +291,7 @@ public class MemberController extends MskimRequestMapping{
    		  msg = "본인만 탈퇴 가능합니다.";
    		  url = "main";
    	  } else {  //정상적이 탈퇴 가능 상태  
-   		 MemberDao dao = new MemberDao();
+   		
    		 Member mem =  dao.selectOne(login);
    		 if(!pass.equals(mem.getPass())) { //비밀번호 오류
     	    msg = "비밀번호 오류";
@@ -340,7 +341,7 @@ public class MemberController extends MskimRequestMapping{
     		request.setAttribute("url", "main");
     		return "/view/alert.jsp";
     	}
-    	List<Member> list = new MemberDao().list();
+    	List<Member> list = dao.list();
     	request.setAttribute("list", list);
     	return "/view/member/list.jsp";
     }
@@ -398,7 +399,7 @@ public class MemberController extends MskimRequestMapping{
     		HttpServletResponse response) {
     	String email = request.getParameter("email");
     	String tel = request.getParameter("tel");
-    	String id = new MemberDao().idSearch(email, tel);
+    	String id = dao.idSearch(email, tel);
     	if(id == null) {
     		request.setAttribute
     		        ("msg", "정보에 맞는 id를 찾을 수 없습니다.");
@@ -420,7 +421,7 @@ public class MemberController extends MskimRequestMapping{
    	    String id = request.getParameter("id");
     	String email = request.getParameter("email");
     	String tel = request.getParameter("tel");
-    	String pass = new MemberDao().pwSearch(id, email, tel);
+    	String pass = dao.pwSearch(id, email, tel);
     	if(pass == null) {
     		request.setAttribute
     		        ("msg", "정보에 맞는 비밀번호를 찾을 수 없습니다.");
@@ -466,7 +467,6 @@ public class MemberController extends MskimRequestMapping{
    	   } else { //로그인 상태
    		   String pass = request.getParameter("pass");
    		   String chgpass = request.getParameter("chgpass");
-   	       MemberDao dao = new MemberDao();
    	       Member mem = dao.selectOne(login);
    		   if(pass.equals(mem.getPass())) { //비밀번호 일치
    			   if(dao.updatePass(login,chgpass)) { //변경 성공
@@ -492,7 +492,6 @@ public class MemberController extends MskimRequestMapping{
     public String idchk (HttpServletRequest request,
     		HttpServletResponse response) {
     	String id= request.getParameter("id");
-	    MemberDao dao = new MemberDao();
 	    Member mem = dao.selectOne(id);
     	if(mem == null) {
     		request.setAttribute("msg", "사용가능한 아이디 입니다.");
